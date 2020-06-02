@@ -1,0 +1,99 @@
+html {
+  position: relative;
+  height: 100%;
+  font-family: "monospace"; }
+
+body {
+  background-image: url("bg.jpg");
+  background-repeat: repeat;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;}
+
+#trades {
+  background-color: #183128;
+  border: 2px solid;
+  border-color: #375d3b;
+  overflow:hidden;
+  border-radius: 0em;
+  margin: 10%;
+  color: #a4c19d;
+  padding: 7px;
+  height: 55%;
+  width: 80%;
+  }
+
+th {
+      padding:12px;
+  }
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 2px dashed #375d3b;
+}
+
+#leftcolumn {
+  width: 50%;
+  float: left;
+}
+
+#rightcolumn {
+  width: 45%;
+  float: right;
+}
+
+.fill {
+  object-fit: fill;
+}
+
+.contain {
+  object-fit: contain;
+}
+
+.scale-down {
+  object-fit: scale-down;
+}
+
+img {
+  height: 370px;
+  width: 600px;
+  position: relative;
+  top: -15px;
+  left: -100px;
+}
+
+h3 {
+  font-size: 14px;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  margin-top: 0; }
+
+.colorLight {
+  color: #a4c19d;
+  padding: 0; }
+
+.colorMedium {
+  color: #375d3b;
+  padding: 0; }
+
+.colorDark {
+  color: #183128;
+  padding: 0; }
+
+a:link {
+  color: #8d7783; }
+
+a:visited {
+  color: #8d7783; }
+
+a:hover {
+  color: #492a24; }
+
+a:active {
+  color: #597581; }

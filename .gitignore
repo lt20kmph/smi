@@ -1,0 +1,4 @@
+old
+*.db
+*.png
+__pycache__
