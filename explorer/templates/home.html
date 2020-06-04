@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="contents">
+  <div class="stats-containor">
+    <h3>Stats</h3>
+    <div class="stats">
+      <div id="averageprofit">
+        <span class="semibold">Average profit:</span> 
+        {{averageprofit|floatformat:2}}%
+      </div>
+      <div id="totalprofit">
+        <span class="semibold">Total profit:</span> 
+        {{totalprofit|floatformat:2}}%
+      </div>
+      <div id="numoftrades">
+        <span class="semibold">Number of trades:</span> {{numoftrades}}
+      </div>
+      <div id="averageduration">
+        <span class="semibold">Average duration:</span> {{averageduration}}
+      </div>
+    </div>
+    {% if trades|length > 1 %}
+    <h3>Last {{trades|length}} trades</h3>
+    {% elif trades|length == 1 %}
+    <h3>First trade</h3>
+    {% else %}
+    <h3>No trades yet</h3>
+    {% endif %}
+    <table class="lasttrades">
+      <tr class="row2">
+        <th>Entry time</th>
+        <th>Exit time</th>
+        <th>Entry price</th>
+        <th>Exit price</th>
+        <th>Profit</th>
+      </tr>
+      {% load tz %}
+      {% timezone "Europe/London" %}
+      {% for t in trades %}
+      <tr class="{% cycle 'row1' 'row2' %}">
+          <td>{{t.entrytime_human|localtime|date:'H:i, jS M'}}</td>
+        {% if t.exittime_human != None %}
+          <td>{{t.exittime_human|localtime|date:'H:i, jS  M'}}</td>
+        {% else %}
+          <td></td>
+        {% endif %}
+          <td>{{t.entryprice|floatformat:5}}</td>
+          <td>{{t.exitprice|floatformat:5}}</td>
+        {% if t.profit != None %}
+          <td>{{t.profit|floatformat:4}}%</td>
+        {% else %}
+          <td></td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+      {% endtimezone %}
+    </table>
+  </div>
+
+  <div class="plot-containor" > 
+    <div class="plot">
+      {% for k in plot %}
+      <div class="bar" style="left:{{k.left}}%;
+                              top:{{k.top}}%;
+                              height:{{k.height}}%;
+                              width:{{k.width}}%">
+      </div>
+      {%endfor%}
+    </div>
+  </div>
+</div>
+{% endblock content %}

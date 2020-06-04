@@ -2,3 +2,9 @@ old
 *.db
 *.png
 __pycache__
+*.log
+secrets.py
+**/__init__.py
+**/__pycache__
+explorer/tests.py
+smierg/asgi.py
