@@ -60,9 +60,9 @@ class Trade(models.Model):
 
     def status(self):
         if self.exittime is not None:
-            return 'CLOSED'
+            return 'Waiting for an entry'
         else:
-            return 'OPEN'
+            return 'Waiting for an exit'
 
     def state(self):
         if self.entrytime == None or self.exittime != None:

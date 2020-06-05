@@ -8,3 +8,5 @@ secrets.py
 **/__pycache__
 explorer/tests.py
 smierg/asgi.py
+explorer/migrations
+control.sh

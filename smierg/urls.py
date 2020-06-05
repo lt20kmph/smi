@@ -17,9 +17,25 @@ from django.urls import path
 from django.conf.urls import re_path
 
 from explorer import views
+import SMIerg2020 as smi
+
+SYMBOLS = smi.SYMBOLS
+INTERVALS = smi.INTERVALS
+
+def mkChoiceRegex (L):
+    s = ""
+    for l in L:
+        if l != L[-1]:
+            s += f'({l})|'
+        else:
+            s += f'({l})'
+    return s 
+
+rs = mkChoiceRegex(SYMBOLS)
+ri = mkChoiceRegex(INTERVALS)
 
 urlpatterns = [
-    re_path(r'^(?i)(?P<symbol>((ETHBTC)|(ETHUSDT)|(BTCUSDT)))/(?P<interval>(1m)|(30m)|(1h)|(4h)|(8h))/$',
+    re_path(r'^(?i)(?P<symbol>' + rs + ')/(?P<interval>' + ri + ')/$',
         views.home,
         name='home',),
 ]

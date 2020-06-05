@@ -8,6 +8,7 @@ from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 from time import sleep
 import time
+from threading import Timer 
 from datetime import datetime as dt, timedelta as td
 from daemonize import Daemonize
 import sys
@@ -24,6 +25,10 @@ PRICE_EXT = '/api/v3/avgPrice'
 SLEEPS = {'1m': 60, '5m': 300, '15m': 900,
           '30m': 1800, '1h': 3600, '4h': 1440, '8h': 2880}
 pid = '/tmp/smierg.pid'
+
+SYMBOLS = ['ETHBTC','ETHUSDT','BTCUSDT']
+INTERVALS = ['1m','5m','30m','1h','4h','8h']
+
 def LOGFILE (symbol,interval):
     return '.' + symbol + '-' + interval + '.log'
 
@@ -34,7 +39,9 @@ def priceParameters(symbol):
 def klineParameters(symbol, interval, limit):
     return {'symbol': symbol, 'interval': interval, 'limit': limit}
 
-engine = create_engine('sqlite:///SMIerg.db?check_same_thread=False')
+DB_PATH = 'sqlite:///' + WORKING_DIR + '/SMIerg.db?check_same_thread=False'
+
+engine = create_engine(DB_PATH)
 Base = declarative_base(bind=engine)
 
 # Only needed to create table structure
@@ -341,7 +348,7 @@ def sellOrbuy(symbol, interval):
 
 ERROR_WAIT = 60
 
-def main(symbol, interval):
+def trader(symbol, interval):
     while True:
         try:
             mkKlines(symbol, interval)
@@ -364,17 +371,28 @@ def main(symbol, interval):
             sleep(ERROR_WAIT)
 
 
+def main(SYMBOLS,INTERVALS):
+    # create threads
+    threads = []
+    for i,I in enumerate(INTERVALS):
+        for j,S in enumerate(SYMBOLS):
+            threads.append(Timer(7*(i*len(SYMBOLS)+j), trader, args=(S,I)))
+
+    # start threads
+    for t in threads:
+        t.start()
+
 if __name__ == '__main__':
-    SYMBOL = sys.argv[1]
-    INTERVAL = sys.argv[2]
-    log.basicConfig(filename=LOGFILE(SYMBOL,INTERVAL)
+    # SYMBOL = sys.argv[1]
+    # INTERVAL = sys.argv[2]
+    log.basicConfig(filename= '.log' # LOGFILE(SYMBOL,INTERVAL)
                    ,format='%(asctime)s %(levelname)s:%(message)s'
                    ,datefmt='%m/%d/%Y %I:%M:%S %p'
                    ,level=log.DEBUG)
     # log.info('Setting working directory = ' + WORKING_DIR)
     daemon = Daemonize( app="smierg"
                       , pid=pid
-                      , action=main(SYMBOL, INTERVAL)
+                      , action=main(SYMBOLS,INTERVALS)
                       , chdir=WORKING_DIR)
     daemon.start()
 """

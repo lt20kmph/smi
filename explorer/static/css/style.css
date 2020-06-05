@@ -68,6 +68,7 @@ button:hover {
   border-bottom: 2px solid var(--color-dark);
   position: relative;
   display:flex;
+  flex-wrap:wrap;
 }
 
 .contents {
@@ -195,4 +196,37 @@ button:hover {
 .caret {
   font-size:1.3em;
   margin-right:7px;
+}
+
+.gapleft {
+  margin-left: 15px;
+}
+
+@media screen and (max-width: 1122px) {
+  .contents {
+    flex-direction:column;
+  }
+  .plot-containor,
+  .stats-containor {
+    width:100%;
+    margin-bottom: 20px;
+  }
+}
+
+@media screen and (max-width: 783px) {
+  .status {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 525px) {
+  table {
+    font-size:0.8rem;
+  }
+}
+
+@media screen and (max-width: 441px) {
+  table {
+    font-size:0.6rem;
+  }
 }

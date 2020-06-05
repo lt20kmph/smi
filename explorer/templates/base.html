@@ -54,6 +54,17 @@
           {% endfor %}
         </div>
       </div>
+      <button class="status">
+        <span class="semibold gapleft">
+          Status:
+        </span>
+          {% if trades.0.status != None %}
+            {{trades.0.status}},
+            trading for {{ uptime }}.
+          {% else %}
+            Not started yet, waiting...
+          {% endif %}
+      </button>
     </div>
 </div>
 {% block content %}

@@ -1,10 +1,26 @@
-$( document ).ready(function() {
-  var h = $('.stats-containor').height();
-  $('.plot-containor').height(h); 
-  var navHeight = $('.navbar').height();
-  $('.ddc').css({top:navHeight});
+function changePage(url) {
+  window.location.href = url;
+}
+
+$(window).bind("resize", function (e) {
+  window.resizeEvt;
+  $(window).resize(function () {
+    clearTimeout(window.resizeEvt);
+    window.resizeEvt = setTimeout(function () {
+      var h = $(".stats-containor").height();
+      $(".plot-containor").height(h);
+      var navHeight = $(".navbar").height();
+      $(".ddc").css({ top: navHeight });
+      setDims();
+    }, 250);
+  });
 });
 
-function changePage (url) {
-  window.location.href = url;
-} 
+$(document).ready(function () {
+  var h = $(".stats-containor").height();
+  $(".plot-containor").height(h);
+  var navHeight = $(".navbar").height();
+  $(".ddc").css({ top: navHeight });
+});
+
+// $(window).on('resize', setDims());
