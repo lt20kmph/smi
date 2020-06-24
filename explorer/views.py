@@ -67,7 +67,7 @@ def mkPlot(symbol,interval):
 def uptime(trade):
     now = dt.now()
     then = dt.utcfromtimestamp(trade.entrytime)
-    return (now - then).seconds
+    return (now - then).total_seconds()
 
 def home(request,symbol,interval):
     symbol = symbol.upper()

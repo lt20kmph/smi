@@ -8,7 +8,7 @@ from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 from time import sleep
 import time
-from threading import Timer 
+from threading import Timer, Lock 
 from datetime import datetime as dt, timedelta as td
 from daemonize import Daemonize
 import sys
@@ -348,26 +348,34 @@ def sellOrbuy(symbol, interval):
 
 ERROR_WAIT = 60
 
-def trader(symbol, interval):
+dbLock = Lock()
+logLock = Lock()
+
+def trader(symbol, interval, lock1, lock2):
     while True:
+        lock1.acquire() 
         try:
             mkKlines(symbol, interval)
         except:
-            log.warning("Something went wrong, could not get klines, trying again in "
-                  + str(ERROR_WAIT) + " seconds")
+            with lock2:
+                log.warning("Something went wrong, could not get klines, trying again in "
+                      + str(ERROR_WAIT) + " seconds")
             sleep(ERROR_WAIT)
         try:
             addInitialPostion(symbol, interval)
         except:
-            log.warning("Something went wrong, could not add initial position, trying again in "
-                  + str(ERROR_WAIT) + " seconds")
+            with lock2:
+                log.warning("Something went wrong, could not add initial position, trying again in "
+                      + str(ERROR_WAIT) + " seconds")
             sleep(ERROR_WAIT)
         try:
             sellOrbuy(symbol, interval)
+            lock1.release()
             sleep(SLEEPS[interval])
         except:
-            log.warning("Something went wrong, could not decide what to do, trying again in "
-                  + str(ERROR_WAIT) + " seconds")
+            with lock2:
+                log.warning("Something went wrong, could not decide what to do, trying again in "
+                      + str(ERROR_WAIT) + " seconds")
             sleep(ERROR_WAIT)
 
 
@@ -376,7 +384,7 @@ def main(SYMBOLS,INTERVALS):
     threads = []
     for i,I in enumerate(INTERVALS):
         for j,S in enumerate(SYMBOLS):
-            threads.append(Timer(7*(i*len(SYMBOLS)+j), trader, args=(S,I)))
+            threads.append(Timer(7*(i*len(SYMBOLS)+j), trader, args=(S,I,dbLock,logLock)))
 
     # start threads
     for t in threads:
@@ -389,12 +397,13 @@ if __name__ == '__main__':
                    ,format='%(asctime)s %(levelname)s:%(message)s'
                    ,datefmt='%m/%d/%Y %I:%M:%S %p'
                    ,level=log.DEBUG)
+    main(SYMBOLS,INTERVALS)
     # log.info('Setting working directory = ' + WORKING_DIR)
-    daemon = Daemonize( app="smierg"
-                      , pid=pid
-                      , action=main(SYMBOLS,INTERVALS)
-                      , chdir=WORKING_DIR)
-    daemon.start()
+    # daemon = Daemonize( app="smierg"
+    #                   , pid=pid
+    #                   , action=main(SYMBOLS,INTERVALS)
+    #                   , chdir=WORKING_DIR)
+    # daemon.start()
 """
 vim:foldmethod=marker foldmarker=--->,<---
 """

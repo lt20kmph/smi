@@ -220,13 +220,29 @@ button:hover {
 }
 
 @media screen and (max-width: 525px) {
+  .navbar,
   table {
     font-size:0.8rem;
+  }
+  .ddLeft {
+    width:50%;
+  }
+  .ddLeft button {
+    width:100%;
+  }
+  #interval-dd-content {
+    left:50%;
   }
 }
 
 @media screen and (max-width: 441px) {
+  .stats-containor {
+    font-size:0.8em;
+  }
   table {
     font-size:0.6rem;
+  }
+  .contents {
+    padding: 5%;
   }
 }
